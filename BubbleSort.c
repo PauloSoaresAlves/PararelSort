@@ -74,11 +74,11 @@ int *paralelBubbleSort(int *vector, int size, int nThreads){
 
 
 void oddEvenSort(int *vector, int size, int nThreads) {
-    int chunkSize = size/nThreads;
+    int chunkSize = size/100;
     for (int k = 0; k < size-1; k++)
     {
         if (k % 2 == 0) {
-            #pragma omp parallel for schedule(guided)
+            #pragma omp parallel for schedule(static,chunkSize)
             for (int i = 0; i <= size-2; i += 2) {
                 if (vector[i] > vector[i+1]) {
                     int temp = vector[i];
@@ -87,7 +87,7 @@ void oddEvenSort(int *vector, int size, int nThreads) {
                 }
             }
         } else {
-            #pragma omp parallel for schedule(guided)
+            #pragma omp parallel for schedule(static,chunkSize)
             for (int i = 1; i <= size-2; i += 2) {
                 if (vector[i] > vector[i+1]) {
                     int temp = vector[i];
