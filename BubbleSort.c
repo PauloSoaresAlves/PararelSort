@@ -73,6 +73,34 @@ int *paralelBubbleSort(int *vector, int size, int nThreads){
 }
 
 
+void oddEvenSort(int *vector, int size, int nThreads) {
+    int chunkSize = size/nThreads;
+    for (int k = 0; k < size-1; k++)
+    {
+        if (k % 2 == 0) {
+            #pragma omp parallel for schedule(guided)
+            for (int i = 0; i <= size-2; i += 2) {
+                if (vector[i] > vector[i+1]) {
+                    int temp = vector[i];
+                    vector[i] = vector[i+1];
+                    vector[i+1] = temp;
+                }
+            }
+        } else {
+            #pragma omp parallel for schedule(guided)
+            for (int i = 1; i <= size-2; i += 2) {
+                if (vector[i] > vector[i+1]) {
+                    int temp = vector[i];
+                    vector[i] = vector[i+1];
+                    vector[i+1] = temp;
+                }
+            }
+        }
+
+    }
+}
+
+
 void printVector(int *vector, int size){
     for (int i = 0; i < size; i++)
     {
@@ -89,15 +117,16 @@ int main(int argc, char const *argv[])
 
     int *vector = generateVector(size);
 
-    int start = clock();
-
     omp_set_num_threads(nThreads);
+
+    double start = omp_get_wtime(); 
     
-    vector = paralelBubbleSort(vector, size, nThreads);
+    //vector = paralelBubbleSort(vector,size,nThreads);
+    oddEvenSort(vector,size,nThreads);
 
-    int end = clock();
+    double end = omp_get_wtime();
 
-    double time_taken = (double)(end - start) / (double)CLOCKS_PER_SEC;
+    double time_taken = end - start;
 
     printf("Tempo de %f segundos\n", time_taken);
 
