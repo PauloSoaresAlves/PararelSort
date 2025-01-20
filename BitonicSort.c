@@ -127,7 +127,7 @@ int main(int argc, char const *argv[]) {
 
     double time_taken = end - start;
 
-    printf("Tempo: %.3f segundos\n", time_taken);
+    printf("%.3f\n", time_taken);
 
     free(vector);
 
